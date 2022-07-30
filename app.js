@@ -83,25 +83,14 @@ const menu = [
 ];
 
 let section = document.querySelector(".section-center");
-let btnCont = document.querySelector(".button-container");
-
-const categories = menu.reduce(
-  (values,item) => {
-    if(!values.includes(item.category)){
-      values.push(item.category);
-    }
-    return values;
-  }, ["All"]);
-
+let btnCont = document.querySelector(".btn-container");
 
 //display menu
 const menuList = (menuItems) => {
   let displayMenu = menuItems.map((item) => {
     return `<div class = "menu-items col-lg-6 col-sm-12">
             <img
-              src = ${item.img}
-              alt = ${item.title}
-              class = "photo"
+              src = ${item.img} alt = ${item.title} class = "photo"
             />
             <div class="menu-info">
               <div class="menu-title">
@@ -117,4 +106,39 @@ const menuList = (menuItems) => {
   displayMenu = displayMenu.join("");
   section.innerHTML = displayMenu;
 }
+
+const categories = menu.reduce(
+  (values,item) => {
+    if(!values.includes(item.category)){
+      values.push(item.category);
+    }
+    return values;
+  }, ["All"]);
+
+const cateList = () => {
+  const cateBtn = categories.map((category) => {
+    return `<button class="btn btn-outline-dark btn-item" data-id=${category}>${category}</button>`;
+  }).join("");
+  btnCont.innerHTML = cateBtn;
+  
+  let btnFilt = document.querySelectorAll(".btn-item");
+  btnFilt.forEach((btn) => {
+    btn.addEventListener("click", (ev) => {
+      const cat = ev.currentTarget.dataset.id;
+      const menuCat = menu.filter((menuItem) => {
+        if(menuItem.category === cat){
+          return menuItem;
+        }
+      });
+      if(cat === "All"){
+        menuList(menu);
+      }
+      else{
+        menuList(menuCat);
+      }
+    }
+    )});
+}
+
 menuList(menu);
+cateList();
